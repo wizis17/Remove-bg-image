@@ -9,10 +9,14 @@ from PIL import Image
 
 torch.set_float32_matmul_precision(["high", "highest"][0])
 
+# Automatically detect device (GPU if available, otherwise CPU)
+device = "cuda" if torch.cuda.is_available() else "cpu"
+print(f"Using device: {device}")
+
 birefnet = AutoModelForImageSegmentation.from_pretrained(
     "ZhengPeng7/BiRefNet", trust_remote_code=True
 )
-birefnet.to("cuda")
+birefnet.to(device)
 
 transform_image = transforms.Compose(
     [
@@ -53,7 +57,7 @@ def process(image: Image.Image) -> Image.Image:
         PIL.Image: The image with the background removed, using the segmentation mask as transparency.
     """
     image_size = image.size
-    input_images = transform_image(image).unsqueeze(0).to("cuda")
+    input_images = transform_image(image).unsqueeze(0).to(device)
     # Prediction
     with torch.no_grad():
         preds = birefnet(input_images)[-1].sigmoid().cpu()

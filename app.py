@@ -89,13 +89,12 @@ image_file_upload = gr.Image(label="Upload an image", type="filepath")
 url_input = gr.Textbox(label="Paste an image URL")
 output_file = gr.File(label="Output PNG File")
 
-# Example images
-chameleon = load_img("Spongebob.jpg", output_type="pil")
+# Example URL (using a public image URL)
 url_example = "https://i.pinimg.com/1200x/28/96/f2/2896f23e1d6fe8703cdd1e2e5ac28214.jpg"
 
-tab1 = gr.Interface(fn, inputs=image_upload, outputs=slider1, examples=[chameleon], api_name="image")
+tab1 = gr.Interface(fn, inputs=image_upload, outputs=slider1, api_name="image")
 tab2 = gr.Interface(fn, inputs=url_input, outputs=slider2, examples=[url_example], api_name="text")
-tab3 = gr.Interface(process_file, inputs=image_file_upload, outputs=output_file, examples=["butterfly.jpg"], api_name="png")
+tab3 = gr.Interface(process_file, inputs=image_file_upload, outputs=output_file, api_name="png")
 
 demo = gr.TabbedInterface(
     [tab1, tab2, tab3], ["Image Upload", "URL Input", "File Output"], title="Background Removal Tool"
